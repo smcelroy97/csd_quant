@@ -1,7 +1,7 @@
-# csd_wasserstein.py
 import numpy as np
 import ot  # pip install POT
 from scipy.interpolate import RegularGridInterpolator
+from scipy.signal import butter, sosfiltfilt
 
 
 def interp_csd_to_grid(
@@ -129,3 +129,27 @@ def pairwise_wd_csd(csds: list[np.ndarray], **kwargs) -> np.ndarray:
             d = wasserstein_csd(csds[i], csds[j], **kwargs)
             D[i, j] = D[j, i] = d
     return D
+
+
+def getbandpass(lfps, sampr, minf=0.05, maxf=300):
+    datband = []
+    sos = butter(4, [minf, maxf], btype="bandpass", fs=sampr, output="sos")
+    for i in range(len(lfps[0])):
+        datband.append(sosfiltfilt(sos, lfps[:, i]))
+    datband = np.array(datband)
+    return datband
+
+
+def get_csd(lfps, sampr, spacing_um=100.0, minf=0.05, maxf=300, norm=True):
+    datband = getbandpass(lfps, sampr, minf, maxf)
+    if datband.shape[0] > datband.shape[1]:  # take CSD along smaller dimension
+        ax = 1
+    else:
+        ax = 0
+
+    # when drawing CSD make sure that negative values (depolarizing intracellular current) drawn in red,
+    # and positive values (hyperpolarizing intracellular current) drawn in blue
+    spacing_mm = spacing_um/1000  # spacing in mm
+    csd = -np.diff(datband, n=2, axis=ax)/spacing_mm**2  # now each column (or row) is an electrode -- CSD along electrodes
+
+    return csd
