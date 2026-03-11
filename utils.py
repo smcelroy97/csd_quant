@@ -1,7 +1,10 @@
+import os
 import numpy as np
 import ot  # pip install POT
 from scipy.interpolate import RegularGridInterpolator
 from scipy.signal import butter, sosfiltfilt
+import pandas as pd
+import h5py
 
 
 def interp_csd_to_grid(
@@ -141,15 +144,60 @@ def getbandpass(lfps, sampr, minf=0.05, maxf=300):
 
 
 def get_csd(lfps, sampr, spacing_um=100.0, minf=0.05, maxf=300, norm=True):
-    datband = getbandpass(lfps, sampr, minf, maxf)
-    if datband.shape[0] > datband.shape[1]:  # take CSD along smaller dimension
-        ax = 1
-    else:
-        ax = 0
+    ax = 0
 
     # when drawing CSD make sure that negative values (depolarizing intracellular current) drawn in red,
     # and positive values (hyperpolarizing intracellular current) drawn in blue
     spacing_mm = spacing_um/1000  # spacing in mm
-    csd = -np.diff(datband, n=2, axis=ax)/spacing_mm**2  # now each column (or row) is an electrode -- CSD along electrodes
+    csd = -np.diff(lfps, n=2, axis=ax)/spacing_mm**2  # now each column (or row) is an electrode -- CSD along electrodes
 
     return csd
+
+
+def get_trigger_key(fp):
+    for x in ['trig/anatrig', 'anatrig']:
+        if x in fp:
+            return x
+    return None
+
+
+def get_trigger_times(fn):
+    fp = h5py.File(fn, 'r')
+    k = get_trigger_key(fp)
+    if k is None:
+        return []
+    hdf5obj = fp[k]
+    x = np.array(fp[hdf5obj.name])
+    try:
+        val = [y[0] for y in fp[x[0, 0]].value]
+    except:
+        val = [y[0] for y in fp[x[0, 0]]]
+    fp.close()
+    return val
+
+
+def sort_data_soa(data_path):  # data_path should be a dir that contains data and excel that contains metadata at top level
+    short_soa = []
+    long_soa = []
+    os.makedirs(f'{data_path}short_soa', exist_ok=True)
+    short_dir = f'{data_path}short_soa/'
+    os.makedirs(f'{data_path}long_soa', exist_ok=True)
+    long_dir = f'{data_path}long_soa/'
+    dir_list = os.listdir(data_path)
+    for file in dir_list:
+        if '.xlsx' in file:
+            df = pd.read_excel(data_path+file)
+            for i, row in df.iterrows():
+                if row['Unnamed: 1'] == 1:
+                    short_soa.append(row['BBN files'])
+                if row['Unnamed: 1'] == 2:
+                    long_soa.append(row['BBN files'])
+                else:
+                    continue
+    for datfile_full in short_soa + long_soa:
+        datfile = datfile_full[1:-1]
+        if datfile_full in short_soa:
+            shutil.copyfile(data_path+datfile, short_dir+datfile)
+        if datfile_full in long_soa:
+            shutil.copyfile(data_path+datfile, long_dir+datfile)
+
