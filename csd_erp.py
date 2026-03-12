@@ -13,18 +13,16 @@ from utils import get_csd, getbandpass, get_trigger_times
 import os
 from mpi4py import MPI
 
-# comm = MPI.COMM_WORLD
-# rank = comm.Get_rank()
-# size = comm.Get_size()
+comm = MPI.COMM_WORLD
+rank = comm.Get_rank()
+size = comm.Get_size()
 rank = 0
 
 data_dir = 'NKI_data/'
-# all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".mat")])
-# files_per_rank = np.array_split(all_files, size)
-files_per_rank = [['1-rb055056032@os.mat']]
+all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".mat")])
+files_per_rank = np.array_split(all_files, size)
+# files_per_rank = [['1-rb055056032@os.mat']]
 for file in files_per_rank[rank]:
-    if rank == 0:
-        print(file)
     if '.mat' in file:
         fn = data_dir + file
         file_id = file[:-7]
