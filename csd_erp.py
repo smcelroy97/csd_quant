@@ -16,7 +16,6 @@ from mpi4py import MPI
 comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
-rank = 0
 
 data_dir = 'NKI_data/'
 all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".mat")])
