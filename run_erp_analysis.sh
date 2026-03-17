@@ -11,4 +11,4 @@
 source ~/.bashrc
 conda activate csd_quant
 export UCX_TLS=tcp,self
-mpiexec -n "$NSLOTS" python csd_pca.py
+mpiexec -n "$NSLOTS" python erp_pca.py

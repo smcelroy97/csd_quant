@@ -3,32 +3,57 @@ import os
 import scipy
 from mpi4py import MPI
 from sklearn.decomposition import PCA
-
-comm = MPI.COMM_WORLD
-rank = comm.Get_rank()
-size = comm.Get_size()
-
-rank = 0
+import matplotlib.pyplot as plt
 
 data_dir = ('NKI_data/csd_erps/')
 all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".npy")])
-files_per_rank = np.array_split(all_files, size)
 
 n_channels = 21
 n_time = 1000
 
 flat_erps = []
 
-for file in files_per_rank[rank]:
+for file in all_files:
     fname = file[:-12]
-    data = np.load(file)
+    data = np.load(data_dir + file)
     flat_erp = data.flatten()
     flat_erps.append(flat_erp)
 
 X = np.stack(flat_erps)
 
-pca = PCA(n_components=5).fit(X)
+pca = PCA(n_components=5)
 pca_erps = pca.fit_transform(flat_erps)
 template = pca.components_[0].reshape(n_channels, n_time)
 
-np.save(f'{data_dir}csd_erps/pc1_erp.npy', erp_csd)
+np.save(f'{data_dir}/pc1_erp.npy', template)
+
+time_ms = np.arange(template.shape[1])
+channels = np.arange(template.shape[0])
+
+v = np.percentile(np.abs(template), 99)
+levels = np.linspace(-v, v, 41)
+
+plot_tmin = -5
+plot_tmax = 50
+
+
+fig, ax = plt.subplots(figsize=(6, 12))
+
+cf = ax.contourf(
+    time_ms,
+    channels,
+    template,
+    levels=levels,
+    cmap='RdBu',
+    extend='both'
+)
+
+ax.invert_yaxis()
+ax.set_xlabel("Time (ms)")
+ax.set_ylabel("Channel")
+ax.set_title("Average CSD ERP")
+ax.axvline(0, color='k', linestyle='--', linewidth=1)
+
+plt.tight_layout()
+plt.savefig(f"{data_dir}/plots/pc1_erp.jpg")
+
