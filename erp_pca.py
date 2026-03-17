@@ -30,3 +30,5 @@ X = np.stack(flat_erps)
 pca = PCA(n_components=5).fit(X)
 pca_erps = pca.fit_transform(flat_erps)
 template = pca.components_[0].reshape(n_channels, n_time)
+
+np.save(f'{data_dir}csd_erps/pc1_erp.npy', erp_csd)
