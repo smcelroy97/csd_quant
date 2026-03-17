@@ -12,7 +12,7 @@
 > sinks and sources  
 > These distances are then summed to create a total Wasserstein Distance score
 
-### **pca_csd.py**
+### **csd_erp.py**
 
 > WIP at the moment, meant to perform **PCA** on a directory of **CSD** data to create an ideal  
 > case CSD to be used in ***wasserstein_distance.py***

@@ -20,7 +20,6 @@ size = comm.Get_size()
 data_dir = 'NKI_data/'
 all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".mat")])
 files_per_rank = np.array_split(all_files, size)
-# files_per_rank = [['1-rb055056032@os.mat']]
 for file in files_per_rank[rank]:
     if '.mat' in file:
         fn = data_dir + file
