@@ -5,7 +5,7 @@ from mpi4py import MPI
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
-data_dir = ('NKI_data/csd_erps/')
+data_dir = ('NKI_data/aligned_data_21/')
 all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".npy")])
 
 n_channels = 21
@@ -40,7 +40,7 @@ plot_tmax = 50
 fig, ax = plt.subplots(figsize=(6, 12))
 
 cf = ax.contourf(
-    time_ms,
+    time_ms/10,
     channels,
     template,
     levels=levels,
@@ -55,5 +55,4 @@ ax.set_title("Average CSD ERP")
 ax.axvline(0, color='k', linestyle='--', linewidth=1)
 
 plt.tight_layout()
-plt.savefig(f"{data_dir}/plots/pc1_erp.jpg")
-
+plt.savefig(f"{data_dir}/plots/aligned_pc1_erp.jpg")
