@@ -14,8 +14,8 @@ from utils import wasserstein_csd, pairwise_wd_csd
 csd1 = np.load("erpdata/2-rb023024011@os.mat_20kHz_avgERP.pkl", allow_pickle=True)  # shape (depth,time) but can vary across animals
 csd2 = np.load("erpdata/2-rb023024052@os.mat_20kHz_avgERP.pkl", allow_pickle=True)
 
-csd1 = csd1['avgCSD']
-csd2 = csd2['avgCSD']
+csdA = csd1['avgCSD']
+csdB = csd2['avgCSD']
 
 d = wasserstein_csd(csd1, csd2, interpolate=True, sp_len=30, t_len=100)
 print("WD =", d)
