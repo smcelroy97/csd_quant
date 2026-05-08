@@ -6,6 +6,7 @@ import os
 ch_info = pd.read_csv('NKI_data/ch_info.csv')
 erp_dir = 'NKI_data/csd_erps/'
 
+# Load channel info for each animal
 dat = {}
 for idx, file in enumerate(ch_info['BBN files']):
     fid = file[1:-8]
