@@ -17,7 +17,7 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-data_dir = 'NKI_data/'
+data_dir = 'NKI_data/raw_files/long_soa/'
 all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".mat")])
 files_per_rank = np.array_split(all_files, size)
 for file in files_per_rank[rank]:
@@ -114,6 +114,7 @@ for file in files_per_rank[rank]:
         mask = (time_ms >= plot_tmin) & (time_ms <= plot_tmax)
 
         fig, ax = plt.subplots(figsize=(6, 12))
+        plt.xlim([0, 50])
 
         cf = ax.contourf(
             time_ms[mask],

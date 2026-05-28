@@ -11,13 +11,16 @@ CSD 2 - In our case, simulated CSD from a model, but can be any CSD
 import numpy as np
 from utils import wasserstein_csd, pairwise_wd_csd
 
+def wd_from_template(csd):
+    print('add function for import here')
+
 csd1 = np.load("erpdata/2-rb023024011@os.mat_20kHz_avgERP.pkl", allow_pickle=True)  # shape (depth,time) but can vary across animals
 csd2 = np.load("erpdata/2-rb023024052@os.mat_20kHz_avgERP.pkl", allow_pickle=True)
 
 csd1 = csd1['avgCSD']
 csd1 = csd2['avgCSD']
 
-d = wasserstein_csd(csd1, csd2, interpolate=True, sp_len=30, t_len=100)
+d = wasserstein_csd(csd1, csd2, interpolate=True, sp_len=len, t_len=100)
 print("WD =", d)
 
 # Pairwise

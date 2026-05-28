@@ -35,7 +35,6 @@ def interp_csd_to_grid(
     )
 
     # New grid
-    # New grid
     depth_new = np.linspace(0.0, 1.0, sp_len)
     time_new = np.linspace(0.0, 1.0, t_len)
     dd, tt = np.meshgrid(depth_new, time_new, indexing="ij")
@@ -176,7 +175,9 @@ def get_trigger_times(fn):
     return val
 
 
-def sort_data_soa(data_path):  # data_path should be a dir that contains data and excel that contains metadata at top level
+def sort_data_soa(data_path):
+    # data_path should be a dir that contains data and excel that contains metadata at top level
+    import shutil
     short_soa = []
     long_soa = []
     os.makedirs(f'{data_path}short_soa', exist_ok=True)
