@@ -7,6 +7,14 @@ import pandas as pd
 import h5py
 
 
+def preprocess_csd(csd, threshold_frac=0.15):
+    csd = csd - np.mean(csd)
+    csd = csd / (np.max(np.abs(csd)) + 1e-12)
+
+    thr = threshold_frac * np.max(np.abs(csd))
+    csd[np.abs(csd) < thr] = 0.0
+    return csd
+
 def interp_csd_to_grid(
     csd: np.ndarray,
     sp_len: int = 30,
@@ -71,6 +79,12 @@ def wasserstein_2d_mass(
 
     a = _to_probability_mass(a2d).reshape(-1)
     b = _to_probability_mass(b2d).reshape(-1)
+
+    if a.sum() == 0 and b.sum() == 0:
+        return 0.0
+
+    if a.sum() == 0 or b.sum() == 0:
+        return 1.0
 
     if a.sum() == 0 and b.sum() == 0:
         return 0.0

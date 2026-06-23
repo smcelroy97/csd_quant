@@ -94,7 +94,7 @@ for file in files_per_rank[rank]:
         # E_good = E[good_epochs]
         #
         # print(f"Kept {E_good.shape[0]}/{E.shape[0]} epochs (ptp thr={thr:.4g})")
-
+'''
         erp_csd = E.mean(axis=0)
         os.makedirs(f'{data_dir}csd_erps', exist_ok=True)
         np.save(f'{data_dir}csd_erps/{file_id}_csd_erp', erp_csd)
@@ -134,3 +134,4 @@ for file in files_per_rank[rank]:
         plt.tight_layout()
         os.makedirs(f"{data_dir}csd_erps/plots", exist_ok=True)
         plt.savefig(f"{data_dir}csd_erps/plots/{file_id}_csd_erp.jpg")
+'''
