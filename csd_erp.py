@@ -17,14 +17,15 @@ comm = MPI.COMM_WORLD
 rank = comm.Get_rank()
 size = comm.Get_size()
 
-data_dir = 'NKI_data/raw_files/long_soa/'
+data_dir = 'NKI_data/raw_files/'
+save_dir = 'NKI_data/csd_erps/'
 all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".mat")])
 files_per_rank = np.array_split(all_files, size)
 for file in files_per_rank[rank]:
     if '.mat' in file:
         fn = data_dir + file
         file_id = file[:-7]
-        samprds = 10000
+        samprds = 1000
 
         fp = h5py.File(fn, 'r')
 
@@ -64,7 +65,7 @@ for file in files_per_rank[rank]:
 
         fs = sampr
         tmin = 0.0  # 0 ms pre
-        tmax = 0.100   # 100 ms post
+        tmax = 0.2  # 100 ms post
 
         pre = int(round(abs(tmin) * fs))       # samples before trigger
         post = int(round(tmax * fs))            # samples after trigger
@@ -94,10 +95,10 @@ for file in files_per_rank[rank]:
         # E_good = E[good_epochs]
         #
         # print(f"Kept {E_good.shape[0]}/{E.shape[0]} epochs (ptp thr={thr:.4g})")
-'''
+
         erp_csd = E.mean(axis=0)
-        os.makedirs(f'{data_dir}csd_erps', exist_ok=True)
-        np.save(f'{data_dir}csd_erps/{file_id}_csd_erp', erp_csd)
+        os.makedirs(f'{save_dir}csd_erps', exist_ok=True)
+        np.save(f'{save_dir}csd_erps/{file_id}_csd_erp', erp_csd)
 
         #  plotting
         erp_csd_plot = erp_csd
@@ -132,6 +133,6 @@ for file in files_per_rank[rank]:
         ax.axvline(0, color='k', linestyle='--', linewidth=1)
 
         plt.tight_layout()
-        os.makedirs(f"{data_dir}csd_erps/plots", exist_ok=True)
-        plt.savefig(f"{data_dir}csd_erps/plots/{file_id}_csd_erp.jpg")
-'''
+        os.makedirs(f"{save_dir}csd_erps/plots", exist_ok=True)
+        plt.savefig(f"{save_dir}csd_erps/plots/{file_id}_csd_erp.jpg")
+

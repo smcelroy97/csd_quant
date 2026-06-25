@@ -28,7 +28,7 @@ for file in os.listdir(erp_dir):
         dat[fn]['erp'] = erp
 
 
-def align_laminar(data, supra_ch, gran_ch, infra_ch, n_out=21):
+def align_laminar(data, supra_ch, gran_ch, infra_ch, n_out=30):
     """
     data: (channels, time)
     supra_ch, gran_ch, infra_ch: anchor channel indices
@@ -64,7 +64,7 @@ def align_laminar(data, supra_ch, gran_ch, infra_ch, n_out=21):
     return aligned
 
 
-aligned_dir = 'NKI_data/aligned_data_21/'
+aligned_dir = 'NKI_data/aligned_data/'
 os.makedirs(aligned_dir, exist_ok=True)
 os.makedirs(aligned_dir+'plots/', exist_ok=True)
 
