@@ -102,36 +102,40 @@ for file in files_per_rank[rank]:
 
         #  plotting
         erp_csd_plot = erp_csd
+        time_ms = np.arange(erp_csd.shape[1]) / fs * 1000
+        channels = np.arange(erp_csd.shape[0])
 
-        time_ms = np.arange(erp_csd_plot.shape[1]) / sampr * 1000 + tmin * 1000
-        channels = np.arange(erp_csd_plot.shape[0])
-
-        v = np.percentile(np.abs(erp_csd_plot), 99)
+        v = np.percentile(np.abs(erp_csd), 99)
         levels = np.linspace(-v, v, 41)
 
-        plot_tmin = -5
-        plot_tmax = 50
+        plot_tmin = 0
+        plot_tmax = 150
 
         mask = (time_ms >= plot_tmin) & (time_ms <= plot_tmax)
 
-        fig, ax = plt.subplots(figsize=(6, 12))
-        plt.xlim([0, 50])
+        print("ERP shape:", erp_csd.shape)
+        print("Available time range:", time_ms[0], "to", time_ms[-1], "ms")
+        print("Samples selected for plot:", mask.sum())
+
+        fig, ax = plt.subplots(figsize=(8, 8))
 
         cf = ax.contourf(
             time_ms[mask],
             channels,
-            erp_csd_plot[:, mask],
+            erp_csd[:, mask],
             levels=levels,
-            cmap='RdBu',
-            extend='both'
+            cmap="RdBu",
+            extend="both"
         )
 
+        ax.set_xlim(plot_tmin, plot_tmax)
         ax.invert_yaxis()
         ax.set_xlabel("Time (ms)")
         ax.set_ylabel("Channel")
         ax.set_title("Average CSD ERP")
-        ax.axvline(0, color='k', linestyle='--', linewidth=1)
+        ax.axvline(0, color="k", linestyle="--", linewidth=1)
 
+        fig.colorbar(cf, ax=ax, label="CSD")
         plt.tight_layout()
         os.makedirs(f"{save_dir}csd_erps/plots", exist_ok=True)
         plt.savefig(f"{save_dir}csd_erps/plots/{file_id}_csd_erp.jpg")

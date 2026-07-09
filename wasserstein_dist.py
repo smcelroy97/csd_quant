@@ -12,7 +12,7 @@ import numpy as np
 from utils import wasserstein_csd, pairwise_wd_csd
 
 
-csd_template = np.load("../csd_quant/pc1_erp.npy", allow_pickle=True)  # shape (depth,time) but can vary across animals
+csd_template = np.load("../csd_quant/aligned_30_erp.npy", allow_pickle=True)  # shape (depth,time) but can vary across animals
 # csd_template = csd_template[:, 0:500]
 
 
