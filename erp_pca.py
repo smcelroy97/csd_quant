@@ -25,7 +25,7 @@ pca = PCA(n_components=5)
 pca_erps = pca.fit_transform(X)
 template = pca.components_[0].reshape(n_channels, n_time)
 
-np.save('aligned_30_erp.npy', template)
+# np.save('aligned_30_erp.npy', template)
 
 fs = 1000  # Hz
 time_ms = np.arange(template.shape[1]) / fs * 1000

@@ -99,7 +99,7 @@ def wasserstein_2d_mass(
     coords = np.column_stack([depth_weight * dd.reshape(-1), time_weight * tt.reshape(-1)])
 
     # Cost matrix (normalize like their code)
-    M = ot.dist(coords, coords)
+    M = ot.dist(coords, coords, metric="euclidean")
     M /= M.max()
 
     # Transport plan + cost
