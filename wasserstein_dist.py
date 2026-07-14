@@ -29,20 +29,22 @@ def wd_from_template(sim_csd):
     print('Calculating Wasserstein Distance...')
     temp_pp = preprocess_csd(csd_template)
     sim_csd_pp = preprocess_csd(sim_csd)
-    d = wasserstein_csd(csd_template, sim_csd, interpolate=False, sp_len=30, t_len=200)
-    d_pp = wasserstein_csd(temp_pp, sim_csd_pp, interpolate=False, sp_len = 30, t_len = 200)
+    d = wasserstein_csd(csd_template, sim_csd, interpolate=True, sp_len=30, t_len=200)
+    d_pp = wasserstein_csd(temp_pp, sim_csd_pp, interpolate=True, sp_len = 30, t_len = 200)
     print(f'Wasserstein Distance from simulated CSD to NHP template = {d}')
     print(f'Wasserstein Distance from simulated CSD to NHP template = {d_pp} after PREPROCESSING')
-    return(d)
+    return(d, d_pp)
 
 if __name__ == '__main__':
     csd_template = np.load("../csd_quant/pc1_erp.npy", allow_pickle=True)
-    csd2 = np.zeros(csd_template.shape)
+    # csd2 = np.zeros(csd_template.shape)
+    csd2 = np.load("../csd_quant/aligned_30_erp.npy", allow_pickle=True)
 
 
 
-    d = wasserstein_csd(csd_template, csd2, interpolate=False, sp_len=len, t_len=100)
-    print("WD =", d)
+    d = wasserstein_csd(csd_template, csd2, interpolate=True, sp_len=30, t_len=200)
+    print(f"WD = {d}")
+    print(f'Preprocessed WD = {d_pp}')
 
     # Pairwise
     # csds = [csd1, csd2, np.load("erpdata/19aug23_50dB_bbn_avgERP.pkl", allow_pickle=True)]

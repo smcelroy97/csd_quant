@@ -5,7 +5,7 @@ from mpi4py import MPI
 from sklearn.decomposition import PCA
 import matplotlib.pyplot as plt
 
-data_dir = ('NKI_data/aligned_data/')
+data_dir = ('NKI_data/csd_erps/')
 all_files = sorted([f for f in os.listdir(data_dir) if f.endswith(".npy")])
 
 first = np.load(os.path.join(data_dir, all_files[0]))
@@ -25,7 +25,7 @@ pca = PCA(n_components=5)
 pca_erps = pca.fit_transform(X)
 template = pca.components_[0].reshape(n_channels, n_time)
 
-# np.save('aligned_30_erp.npy', template)
+np.save('pc1_erp.npy', template)
 
 fs = 1000  # Hz
 time_ms = np.arange(template.shape[1]) / fs * 1000
