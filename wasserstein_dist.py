@@ -8,11 +8,19 @@ CSD 1 - should be an ideal CSD from PC 1 of a large set of ERPs and animals
 CSD 2 - In our case, simulated CSD from a model, but can be any CSD
 '''
 
+from pathlib import Path
 import numpy as np
-from utils import wasserstein_csd, pairwise_wd_csd
+
+if __package__:
+    from .utils import wasserstein_csd, pairwise_wd_csd
+else:
+    # Preserve direct script execution from the csd_quant directory.
+    from utils import wasserstein_csd, pairwise_wd_csd
+
+MODULE_DIR = Path(__file__).resolve().parent
 
 
-csd_template = np.load("../csd_quant/aligned_30_erp.npy", allow_pickle=True)  # shape (depth,time) but can vary across animals
+csd_template = np.load(MODULE_DIR / "aligned_30_erp.npy", allow_pickle=True)  # shape (depth,time) but can vary across animals
 # csd_template = csd_template[:, 0:500]
 
 
@@ -36,9 +44,9 @@ def wd_from_template(sim_csd):
     return(d, d_pp)
 
 if __name__ == '__main__':
-    csd_template = np.load("../csd_quant/pc1_erp.npy", allow_pickle=True)
+    csd_template = np.load(MODULE_DIR / "pc1_erp.npy", allow_pickle=True)
     # csd2 = np.zeros(csd_template.shape)
-    csd2 = np.load("../csd_quant/aligned_30_erp.npy", allow_pickle=True)
+    csd2 = np.load(MODULE_DIR / "aligned_30_erp.npy", allow_pickle=True)
 
 
 
