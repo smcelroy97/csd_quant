@@ -79,7 +79,7 @@ for animal in dat:
     channels = np.arange(aligned.shape[0])
 
     cf = ax.contourf(
-        time_ms/10,
+        time_ms,
         channels,
         aligned,
         levels=levels,
@@ -88,7 +88,7 @@ for animal in dat:
     )
 
     ax.invert_yaxis()
-    plt.xlim([0, 50])
+    plt.xlim([0, time_ms[-1]])
     ax.set_xlabel("Time (ms)")
     ax.set_ylabel("Channel")
     ax.set_title("Average CSD ERP (Aligned)")
