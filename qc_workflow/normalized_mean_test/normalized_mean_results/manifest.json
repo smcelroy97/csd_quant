@@ -1,0 +1,9 @@
+{
+  "source_run": "/Users/scoot/dev/csd_quant/qc_workflow/csd_channel_interpretation/qc_results/run_20260923_csd_one",
+  "source_manifest_sha256": "67c979ae692df47b29759baf579a3d45369acd23f6ca3fca0f5f5dc3450b98e9",
+  "script_sha256": "ed21c307a80e38f44d7c1914a1a35bcf764b16363816c4ef6bd8b9f2c9e418e8",
+  "draws": 100,
+  "seed": 314159,
+  "wd_time_bin_ms": 5,
+  "status": "complete"
+}

@@ -1,0 +1,10 @@
+{
+  "status": "complete",
+  "source": "/Users/scoot/dev/csd_quant/qc_workflow/csd_channel_interpretation/qc_results/run_20260923_csd_one",
+  "source_manifest_sha256": "67c979ae692df47b29759baf579a3d45369acd23f6ca3fca0f5f5dc3450b98e9",
+  "script_sha256": "6d03ceb6892cac880d569443b7e6ed928c038c317c20ea9ac7bf823cca2a7a22",
+  "draws": 100,
+  "seed": 314159,
+  "pairing": "filename-derived, not confirmed animal IDs",
+  "wd_time_bin_ms": 5
+}

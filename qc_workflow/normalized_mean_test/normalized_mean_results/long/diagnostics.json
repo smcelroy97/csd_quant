@@ -1,0 +1,84 @@
+{
+  "n": 13,
+  "held_out_wd": {
+    "p05": 0.1094552483589327,
+    "median": 0.1806486814497481,
+    "p95": 0.2215068260208469
+  },
+  "comparisons": {
+    "mean": {
+      "normalized_mean_lower_count": 4,
+      "n": 13,
+      "paired_difference_quantiles": {
+        "p05": -0.017455258310706257,
+        "median": 0.005198346072398441,
+        "p95": 0.020311929662460527
+      },
+      "reference_wd": {
+        "p05": 0.11812160256377227,
+        "median": 0.17493396688415402,
+        "p95": 0.21225530956722544
+      }
+    },
+    "median": {
+      "normalized_mean_lower_count": 5,
+      "n": 13,
+      "paired_difference_quantiles": {
+        "p05": -0.007782965410910292,
+        "median": 0.0017137046743860296,
+        "p95": 0.01523135835495687
+      },
+      "reference_wd": {
+        "p05": 0.11331118295385592,
+        "median": 0.1815974191363159,
+        "p95": 0.21890833279115365
+      }
+    },
+    "pc1": {
+      "normalized_mean_lower_count": 7,
+      "n": 13,
+      "paired_difference_quantiles": {
+        "p05": -0.08968966506901721,
+        "median": -0.004535481816851039,
+        "p95": 0.04180494789704683
+      },
+      "reference_wd": {
+        "p05": 0.15540401197570863,
+        "median": 0.18850674484828156,
+        "p95": 0.22438892918350162
+      }
+    },
+    "pc1_shape": {
+      "normalized_mean_lower_count": 5,
+      "n": 13,
+      "paired_difference_quantiles": {
+        "p05": -0.05108722226062251,
+        "median": 0.010422759551368899,
+        "p95": 0.06303108579686006
+      },
+      "reference_wd": {
+        "p05": 0.12743933829501797,
+        "median": 0.17477080126373357,
+        "p95": 0.1949138631400966
+      }
+    }
+  },
+  "leave_one_out_correlation": {
+    "p05": 0.9859504054186606,
+    "median": 0.9873778959132401,
+    "p95": 0.9893309291872061
+  },
+  "minimum_leave_one_out_correlation": 0.9857835876015862,
+  "bootstrap_correlation": {
+    "p05": 0.78876186644473,
+    "median": 0.8842688882339047,
+    "p95": 0.9431493694802103
+  },
+  "landmark_jitter_correlation": {
+    "p05": 0.689433509572674,
+    "median": 0.7831729559594078,
+    "p95": 0.8701570904143234
+  },
+  "correlation_with_ordinary_mean": 0.974884518596831,
+  "normalization_tests": "passed"
+}

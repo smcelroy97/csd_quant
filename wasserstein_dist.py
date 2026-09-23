@@ -4,7 +4,7 @@ of two CSD files, and sums them to provide a total wasserstein distance
 Additionally there a pairwise calculation can be done to compare more
 than two files at a time
 
-CSD 1 - should be an ideal CSD from PC 1 of a large set of ERPs and animals
+CSD 1 - QC-derived, anatomically aligned short-SOA mean
 CSD 2 - In our case, simulated CSD from a model, but can be any CSD
 '''
 
@@ -12,16 +12,16 @@ from pathlib import Path
 import numpy as np
 
 if __package__:
-    from .utils import wasserstein_csd, pairwise_wd_csd
+    from .utils import wasserstein_csd, align_model_csd
 else:
     # Preserve direct script execution from the csd_quant directory.
-    from utils import wasserstein_csd, pairwise_wd_csd
+    from utils import wasserstein_csd, align_model_csd
 
 MODULE_DIR = Path(__file__).resolve().parent
 
 
 # Keep prestimulus data for visualization; select the scoring window below.
-with np.load(MODULE_DIR / "aligned_30_erp_prestim10.npz", allow_pickle=False) as target:
+with np.load(MODULE_DIR / "qc_workflow/csd_channel_interpretation/qc_results/run_20260923_csd_one/short/mean_short.npz", allow_pickle=False) as target:
     csd_template = target['csd'].copy()
     template_times_ms = target['times_ms'].copy()
 
@@ -48,17 +48,12 @@ def poststimulus_csd(csd, times_ms):
     return np.stack([np.interp(np.arange(200), t, row[keep]) for row in csd])
 
 
-def preprocess_csd(csd, threshold_frac=0.15):
-    csd = csd - np.mean(csd)
-    csd = csd / (np.max(np.abs(csd)) + 1e-12)
+def wd_from_template(sim_csd, sim_times_ms=None, *, sim_depths_um=None,
+                     anchor_depths_um=(475.0, 1100.0, 1625.0)):
+    """Return (total, sink, source) unthresholded WD on the 1-ms [0,200) grid.
 
-    thr = threshold_frac * np.max(np.abs(csd))
-    csd[np.abs(csd) < thr] = 0.0
-    return csd
-
-
-def wd_from_template(sim_csd, sim_times_ms=None):
-    """Return raw and legacy preprocessed WD, both restricted to [0, 200) ms.
+    With sim_depths_um, align physical model CSD using its landmarks.
+    Without depths, input must already use the experimental 30-row alignment.
 
     Omitted times are supported only for 200 samples at 1 kHz starting at 0.
     Pass explicit times for simulated data or any epoch containing prestimulus.
@@ -70,11 +65,16 @@ def wd_from_template(sim_csd, sim_times_ms=None):
         sim_times_ms = np.arange(200)
     temp = poststimulus_csd(csd_template, template_times_ms)
     simulated = poststimulus_csd(sim_csd, sim_times_ms)
-    d = wasserstein_csd(temp, simulated, interpolate=True, sp_len=30, t_len=200)
-    d_pp = wasserstein_csd(preprocess_csd(temp), preprocess_csd(simulated),
-                           interpolate=True, sp_len=30, t_len=200)
-    print(f'Poststimulus WD [0, 200) ms = {d}; legacy pp_wd = {d_pp}')
-    return d, d_pp
+    if sim_depths_um is not None:
+        simulated = align_model_csd(simulated, sim_depths_um, anchor_depths_um)
+    if temp.shape != (30, 200) or simulated.shape != (30, 200):
+        raise ValueError("Scoring requires aligned 30-depth x 200 one-ms samples")
+    d, d_sink, d_src = wasserstein_csd(temp, simulated)
+
+    print(f'Poststimulus WD [0, 200) ms = {d}\n'
+          f'WD of Sinks = {d_sink}\n'
+          f'WD of Sources = {d_src}')
+    return d, d_sink, d_src
 
 
 if __name__ == '__main__':

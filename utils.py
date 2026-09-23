@@ -1,7 +1,6 @@
 import os
 import numpy as np
 import ot  # pip install POT
-from scipy.interpolate import RegularGridInterpolator
 from scipy.signal import butter, sosfiltfilt
 import pandas as pd
 import h5py
@@ -15,47 +14,34 @@ def preprocess_csd(csd, threshold_frac=0.15):
     csd[np.abs(csd) < thr] = 0.0
     return csd
 
-def interp_csd_to_grid(
-    csd: np.ndarray,
-    sp_len: int = 30,
-    t_len: int = 100,
-) -> np.ndarray:
+def align_model_csd(csd, depths_um, anchor_depths_um=(475.0, 1100.0, 1625.0)):
+    """Map physical CSD depths to 30 anatomical bins; preserve time samples.
+
+    Supra/gran/infra centers map to rows 7/15/22. Use CSD depths after
+    endpoint contacts have been removed, not the original LFP depths.
     """
-    Interpolate a CSD array to (sp_len, t_len) on a normalized [0,1]x[0,1] grid.
-    Assumes csd shape = (depth, time)
-    """
-    z = np.asarray(csd, dtype=float)
-    if z.ndim != 2:
-        raise ValueError("csd must be 2D (depth, time)")
-
-    d_len, t_orig = z.shape
-
-    # Original grid (normalized, as in Rimehaug et al.)
-    depth = np.linspace(0.0, 1.0, d_len)
-    time = np.linspace(0.0, 1.0, t_orig)
-
-    interp = RegularGridInterpolator(
-        (depth, time),
-        z,
-        method="linear",      # cubic not supported; linear is what POT expects anyway
-        bounds_error=False,
-        fill_value=0.0,
-    )
-
-    # New grid
-    depth_new = np.linspace(0.0, 1.0, sp_len)
-    time_new = np.linspace(0.0, 1.0, t_len)
-    dd, tt = np.meshgrid(depth_new, time_new, indexing="ij")
-
-    pts = np.column_stack([dd.ravel(), tt.ravel()])
-    z_new = interp(pts).reshape(sp_len, t_len)
-
-    return z_new
+    csd = np.asarray(csd, dtype=float)
+    depths = np.asarray(depths_um, dtype=float)
+    anchors = np.asarray(anchor_depths_um, dtype=float)
+    if csd.ndim != 2 or min(csd.shape) < 2 or depths.shape != (csd.shape[0],):
+        raise ValueError("Expected CSD (depth,time) and one physical depth per row")
+    if not np.isfinite(csd).all() or not np.isfinite(depths).all():
+        raise ValueError("CSD and depths must be finite")
+    if np.any(np.diff(depths) <= 0):
+        raise ValueError("Depths must strictly increase")
+    if anchors.shape != (3,) or not np.isfinite(anchors).all():
+        raise ValueError("Provide three finite supra/gran/infra depths")
+    source = np.r_[depths[0], anchors, depths[-1]]
+    if np.any(np.diff(source) <= 0):
+        raise ValueError("Landmarks must be ordered and strictly inside the CSD depth range")
+    query = np.interp(np.arange(30), [0, 7, 15, 22, 29], source)
+    return np.column_stack([np.interp(query, depths, csd[:, t])
+                            for t in range(csd.shape[1])])
 
 
 def _to_probability_mass(arr: np.ndarray, eps: float = 1e-12) -> np.ndarray:
     """Clip to nonnegative and normalize to sum=1 (required by balanced EMD)."""
-    a = np.asarray(arr, dtype=float)
+    a = np.array(arr, dtype=float, copy=True)
     a[a < 0] = 0.0
     s = a.sum()
     if s <= eps:
@@ -103,29 +89,30 @@ def wasserstein_2d_mass(
     M /= M.max()
 
     # Transport plan + cost
-    G = ot.emd(a, b, M)
-    return float((M * G).sum())
+    value, log = ot.emd2(a, b, M, numItermax=1000000, log=True)
+    if log.get("warning"):
+        raise RuntimeError(log["warning"])
+    return float(value)
 
 
 def wasserstein_csd(
     csd_a: np.ndarray,
     csd_b: np.ndarray,
-    interpolate: bool = True,
-    sp_len: int = 30,
-    t_len: int = 100,
     depth_weight: float = 1.0,
     time_weight: float = 1.0,
-) -> float:
+) -> tuple[float, float, float]:
     """
     Total WD between two CSD patterns = WD(sinks) + WD(sources).
-    Sinks are abs(negative CSD); sources are positive CSD. :contentReference[oaicite:1]{index=1}
+    Sinks are abs(negative CSD); sources are positive CSD
     """
-    A = interp_csd_to_grid(csd_a, sp_len, t_len) if interpolate else np.asarray(csd_a, float)
-    B = interp_csd_to_grid(csd_b, sp_len, t_len) if interpolate else np.asarray(csd_b, float)
-
-    if A.shape != B.shape:
-        raise ValueError("After interpolation, shapes still differ. Check inputs.")
-
+    A, B = np.asarray(csd_a, float), np.asarray(csd_b, float)
+    if A.ndim != 2 or B.ndim != 2 or A.shape != B.shape or min(A.shape) < 2:
+        raise ValueError("CSD inputs must have identical nonempty depth/time grids")
+    if not np.isfinite(A).all() or not np.isfinite(B).all():
+        raise ValueError("CSD inputs must be finite")
+    if not np.isfinite([depth_weight, time_weight]).all() or min(depth_weight, time_weight) <= 0:
+        raise ValueError("Distance weights must be finite and positive")
+    # Inputs must already share anatomical alignment and time coordinates.
     sinks_A = np.maximum(-A, 0.0)
     sinks_B = np.maximum(-B, 0.0)
     src_A = np.maximum(A, 0.0)
@@ -133,7 +120,7 @@ def wasserstein_csd(
 
     wd_sinks = wasserstein_2d_mass(sinks_A, sinks_B, depth_weight, time_weight)
     wd_src = wasserstein_2d_mass(src_A, src_B, depth_weight, time_weight)
-    return wd_sinks + wd_src
+    return wd_sinks + wd_src, wd_sinks, wd_src
 
 
 def pairwise_wd_csd(csds: list[np.ndarray], **kwargs) -> np.ndarray:
@@ -142,7 +129,7 @@ def pairwise_wd_csd(csds: list[np.ndarray], **kwargs) -> np.ndarray:
     D = np.zeros((n, n), dtype=float)
     for i in range(n):
         for j in range(i, n):
-            d = wasserstein_csd(csds[i], csds[j], **kwargs)
+            d, _, _ = wasserstein_csd(csds[i], csds[j], **kwargs)
             D[i, j] = D[j, i] = d
     return D
 

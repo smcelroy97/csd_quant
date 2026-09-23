@@ -1,0 +1,314 @@
+{
+  "time_window_ms": [
+    -10,
+    200
+  ],
+  "endpoint": "exclusive",
+  "sampling_rate_hz": 1000,
+  "shape": [
+    30,
+    210
+  ],
+  "method": "PC1 of centered flattened aligned recording ERPs; not the mean",
+  "filter_hz": [
+    0.05,
+    300
+  ],
+  "filter_order": 4,
+  "filter": "continuous zero-phase Butterworth SOS",
+  "baseline_subtraction": false,
+  "spacing_um": 100,
+  "anchor_convention": "unchanged from csd_alignment.py; metadata indices used directly",
+  "pc1_explained_variance_ratio": 0.26234486751472763,
+  "sign_reference": "aligned_30_erp.npy poststimulus correlation",
+  "poststimulus_correlation_old": 0.9999999076201767,
+  "old_template_sha256": "2645cac6e78e744a4ac70f8e82ec803dd02a2abdd5ee840cbe9fe122594a1c0a",
+  "recordings": [
+    {
+      "file": "1-rb055056032@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 112,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        5,
+        13,
+        16
+      ]
+    },
+    {
+      "file": "1-rb055056033@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 205,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        5,
+        13,
+        16
+      ]
+    },
+    {
+      "file": "1-rb057058029@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 132,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        12,
+        15,
+        18
+      ]
+    },
+    {
+      "file": "1-rb057058032@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 204,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        12,
+        15,
+        18
+      ]
+    },
+    {
+      "file": "1-rb059060027@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 106,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        7,
+        14,
+        17
+      ]
+    },
+    {
+      "file": "1-rb059060032@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 191,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        7,
+        14,
+        17
+      ]
+    },
+    {
+      "file": "2-gt034035048@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 110,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        7,
+        14,
+        16
+      ]
+    },
+    {
+      "file": "2-gt034035052@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 215,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        7,
+        14,
+        16
+      ]
+    },
+    {
+      "file": "2-gt044045045@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 120,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        9,
+        16,
+        18
+      ]
+    },
+    {
+      "file": "2-gt044045049@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 205,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        9,
+        16,
+        18
+      ]
+    },
+    {
+      "file": "2-gt057058047@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 102,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        11,
+        16,
+        18
+      ]
+    },
+    {
+      "file": "2-gt057058050@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 208,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        11,
+        16,
+        18
+      ]
+    },
+    {
+      "file": "2-gt059060047@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 102,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        8,
+        13,
+        16
+      ]
+    },
+    {
+      "file": "2-gt059060051@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 215,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        8,
+        13,
+        16
+      ]
+    },
+    {
+      "file": "2-rb043044029@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 127,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        5,
+        8,
+        10
+      ]
+    },
+    {
+      "file": "2-rb043044033@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 206,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        5,
+        8,
+        10
+      ]
+    },
+    {
+      "file": "2-rb045046029@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 116,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        15,
+        17,
+        19
+      ]
+    },
+    {
+      "file": "2-rb045046034@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 213,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        15,
+        17,
+        19
+      ]
+    },
+    {
+      "file": "2-rb051052032@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 112,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        6,
+        13,
+        15
+      ]
+    },
+    {
+      "file": "2-rb051052036@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 205,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        6,
+        13,
+        15
+      ]
+    },
+    {
+      "file": "2-rb057058029@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 132,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        3,
+        8,
+        11
+      ]
+    },
+    {
+      "file": "2-rb057058032@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 204,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        3,
+        8,
+        11
+      ]
+    },
+    {
+      "file": "2-rb059060027@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 106,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        8,
+        12,
+        15
+      ]
+    },
+    {
+      "file": "2-rb059060032@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 191,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        8,
+        12,
+        15
+      ]
+    },
+    {
+      "file": "2-rb061062029@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 122,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        4,
+        8,
+        11
+      ]
+    },
+    {
+      "file": "2-rb061062033@os.mat",
+      "source_fs_hz": 44000.0,
+      "n_epochs": 202,
+      "excluded_epochs": 0,
+      "anchors_as_in_existing_code": [
+        4,
+        8,
+        11
+      ]
+    }
+  ]
+}

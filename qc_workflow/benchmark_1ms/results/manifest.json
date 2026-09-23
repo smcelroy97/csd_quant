@@ -1,0 +1,12 @@
+{
+  "status": "complete",
+  "source": "/Users/scoot/dev/csd_quant/qc_workflow/csd_channel_interpretation/qc_results/run_20260923_csd_one",
+  "group": "short",
+  "window_ms": [
+    0,
+    200
+  ],
+  "depth_bins": 30,
+  "solver": "exact balanced EMD",
+  "notes": "Short-SOA mean held out by recording; one recording per inferred pair within this SOA. Split-half same-recording benchmark. No simulation ranking tested."
+}
