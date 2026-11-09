@@ -69,13 +69,17 @@ def wd_from_template(sim_csd, sim_times_ms=None, *, sim_depths_um=None,
         simulated = align_model_csd(simulated, sim_depths_um, anchor_depths_um)
     if temp.shape != (30, 200) or simulated.shape != (30, 200):
         raise ValueError("Scoring requires aligned 30-depth x 200 one-ms samples")
-    d, d_sink, d_src = wasserstein_csd(temp, simulated)
+    total_d = wasserstein_csd(temp, simulated)
+    regional_d = {
+        "supragranular": wasserstein_csd(temp[:14], simulated[:14]),
+        "granular": wasserstein_csd(temp[14:17], simulated[14:17]),
+        "infragranular": wasserstein_csd(temp[17:], simulated[17:]),
+    }
 
-    print(f'Poststimulus WD [0, 200) ms = {d}\n'
-          f'WD of Sinks = {d_sink}\n'
-          f'WD of Sources = {d_src}')
-    return d, d_sink, d_src
+    print(f'Poststimulus WD [0, 200) ms = {total_d}\n')
+
+    return total_d, regional_d
 
 
 if __name__ == '__main__':
-    wd_from_template(csd_template, template_times_ms)
+    total, regional = wd_from_template(csd_template, template_times_ms)
